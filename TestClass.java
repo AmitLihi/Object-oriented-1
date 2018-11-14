@@ -15,6 +15,9 @@ class TestClass {
 	Polynom p2 = new Polynom("2*x^1+4*x^0");
 	Polynom p3 = new Polynom();	
 	Polynom p4 = new Polynom("2*x^2+4*x^1");
+	Polynom_able p5 = new Polynom("2*x^1+4*x^0");
+	Polynom p6 = new Polynom("0.2*x^4-1.5*x^3+3.0*x^2-1*x^1-5.0*x^0");
+	
 
 	@Test
 	void testF (){
@@ -30,7 +33,7 @@ class TestClass {
 
 	@Test
 	void testAddPolynom_able() {
-		p1.add(p2);
+		p1.add(p5);
 		assertEquals("4.0*x^0+6.0*x^1+2.0*x^2", p1.getPolynom());
 	}
 
@@ -50,11 +53,6 @@ class TestClass {
 	void testIsZero() {
 		assertTrue(p3.isZero());
 		assertFalse(p1.isZero());
-	}
-
-	@Test
-	void testZeros() {
-		assertEquals(-1,p1.zeros(-10,10,0.001));
 	}
 
 	@Test
@@ -87,6 +85,16 @@ class TestClass {
 	@Test
 	void testArea() {
 		if(p1.area(0,1, 0.0001)!=2.6669666699997197) {
+			fail("The function \"Area\" doesn't work as expected");
+		}
+		else {
+			System.out.println("\"Area\" function works well");
+		}
+	}
+	
+	@Test
+	void testAreaNegative() {
+		if(p6.areaNegative(-2,6, 0.001)!=25.183742050201328) {
 			fail("The function \"Area\" doesn't work as expected");
 		}
 		else {

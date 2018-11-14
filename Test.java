@@ -112,8 +112,6 @@ public class Test {
 		//add Polynom function
 		p1.add(p2);
 		System.out.println("add Polynom function: \"1.0*x^1+2.0*x^2+6.0*x^3\":  " + p1);
-		p2.add(p3);
-		System.out.println("add Polynom function: \"6.0*x^0-5.0*x^1+1.0*x^2+3.0*x^3\":  " + p2);
 		p3.add(p);
 		System.out.println("add Polynom function: \"6.0*x^0-3.0*x^1+1.0*x^2+3.0*x^3\":  " + p3);
 		System.out.println();
@@ -158,5 +156,12 @@ public class Test {
 		System.out.println("area function: \"2.333583334999779\":  " + p6.area(0, 1, 0.0001));
 		System.out.println();
 		
+		//PolyGraph function
+		Polynom p7 = new Polynom("0.2*x^4-1.5*x^3+3.0*x^2-1*x^1-5.0*x^0");
+		p7.PolyGraph(-2,6,0.25);
+		p7.setVisible(true);
+		
+		//areaNegative function
+		System.out.println(p7.areaNegative(-2, 6, 0.001));
 	}
 }

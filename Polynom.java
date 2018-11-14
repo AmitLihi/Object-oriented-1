@@ -1,12 +1,28 @@
 package myMath;
 
+import java.awt.Color;
 import java.net.StandardSocketOptions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
+import de.erichseifert.gral.data.DataTable;
+import de.erichseifert.gral.plots.XYPlot;
+import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
+import de.erichseifert.gral.plots.lines.LineRenderer;
+import de.erichseifert.gral.ui.InteractivePanel;
 import myMath.Monom;
+
+import java.awt.Color;
+import javax.swing.JFrame;
+import de.erichseifert.gral.data.DataTable;
+import de.erichseifert.gral.plots.XYPlot;
+import de.erichseifert.gral.plots.lines.DefaultLineRenderer2D;
+import de.erichseifert.gral.plots.lines.LineRenderer;
+import de.erichseifert.gral.plots.points.PointRenderer;
+import de.erichseifert.gral.ui.InteractivePanel;
+
 /**
  * This class represents a Polynom with add, multiply functionality, it also should support the following:
  * 1. Riemann's Integral: https://en.wikipedia.org/wiki/Riemann_integral
@@ -16,7 +32,7 @@ import myMath.Monom;
  * @author Boaz
  *
  */
-public class Polynom implements Polynom_able{
+public class Polynom extends JFrame implements Polynom_able{
 
 	private ArrayList <Monom> polyArr = new ArrayList();
 	private String polynom;
@@ -239,46 +255,6 @@ public class Polynom implements Polynom_able{
 		return false;
 	}
 
-	public double zeros(double x0, double x1, double eps) {
-		Polynom p = new Polynom (); // creates a new polynom for temporary using
-		p.setPolynomArray(this.getPolynomArray());
-		p.setPolynom(this.getPolynom());
-		Polynom_able p1 = new Polynom();
-		p1 = p.derivative(); // save the derivative of p inside p1
-		Iterator<Monom> t = p1.iteretor();
-		while(t.hasNext()) { // loop which runs until the higer power is 1 (so we can get one value of zero)
-			if(t.next().get_power() > 1) {
-				p1 = p1.derivative();
-				t = p1.iteretor();
-			}
-		}
-		double a,b;
-		a = p1.f(x0);
-		b = p1.f(x1);
-		if(!(a*b < 0)) { // check that the two borders higher than 0
-			System.out.println("x0 and x1 higher than 0");
-			return 0.0;
-		}
-		double mid;
-		while(x0<x1) { // calculate the value closest to zero 
-			mid = (x0+x1)/2;
-			a = p1.f(x0)*p1.f(mid);
-			if(a > 0) {
-				x0 = mid;
-			}
-			else if(a < 0) {
-				x1 = mid;
-			}
-			else {
-				a = p1.f(mid);
-				if(Math.abs(a) < eps) {
-					return mid;
-				}
-			}
-		}
-		return 0;
-	}
-
 	@Override
 	/**
 	 * Compute a value x' (x0<=x'<=x1) for with |f(x')| < eps
@@ -358,7 +334,22 @@ public class Polynom implements Polynom_able{
 		}
 		return sum;
 	}
-
+	/**
+	 * Compute Riemann's Integral over this Polynom starting from x0, till x1 using eps size steps,
+	 * @return the approximated area below the x-axis below this Polynom and between the [x0,x1] ran
+	 */
+	public double areaNegative(double x0, double x1, double eps) {
+		double sum = 0;
+		double num = 0;
+		for (double i=x0; i<=x1; i=i+eps) {
+			num = f(i)*eps;
+			if(num < 0){
+				sum = sum + num;
+			}
+		}
+		return Math.abs(sum);
+	}
+	
 	@Override
 	/**
 	 * @return an Iterator (of Monoms) over this Polynom
@@ -381,7 +372,6 @@ public class Polynom implements Polynom_able{
 				}
 			}
 		}
-		/////////////////
 		ArrayList <Monom> arr1 = new ArrayList(); 
 		Iterator<Monom> t = arr.iterator();
 		Monom m = new Monom ();
@@ -456,5 +446,59 @@ public class Polynom implements Polynom_able{
 		}
 		this.setPolynom(str);
 	}
-	
+/**
+ * function that exhibit a polynom function
+ * @param x0 is the starting range
+ * @param x1 is the end of range
+ * @param eps is the range input 
+ */
+	public void PolyGraph(double x0, double x1, double eps) {
+		if(x0>x1) {
+			System.out.println("You have written a wrong range. \nWe have swappen it for you so x0 would be the min num and x1 would be the max num.");
+			double temp = x0;
+			x0 = x1;
+			x1 = temp;
+		}
+
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(1000, 800);
+		Polynom_able p = new Polynom ();
+		p = this.derivative();
+		DataTable data = new DataTable(Double.class, Double.class);
+		DataTable dataP = new DataTable(Double.class, Double.class);
+		for (double i=x0; i<=x1; i+=eps) {
+			boolean b = checkPoint(i,p);// true if it's a min/max point
+			double y = f(i);
+			if(b==false) {
+				data.add(i, y);
+			}
+			else {
+				dataP.add(i,y);
+			}
+		}
+		XYPlot plot = new XYPlot(data, dataP);
+		getContentPane().add(new InteractivePanel(plot));
+		LineRenderer lines = new DefaultLineRenderer2D();
+		plot.setLineRenderers(data, lines);
+		Color color = new Color(0.0f, 0.3f, 1.0f);
+		plot.getPointRenderers(data).get(0).setColor(color);
+		plot.getPointRenderers(dataP).get(0).setColor(color.RED);//min/max point
+		plot.getLineRenderers(data).get(0).setColor(color);
+		
+
+
+	}
+/**
+ * function that checks if the point that given is a min/max point
+ * @param x is the point
+ * @param p is the derivative of "this" polynom
+ * @return true if it's a min/max point
+ */
+	public boolean checkPoint(double x, Polynom_able p) {
+		double before = p.f(x-0.0001);
+		double after = p.f(x+0.0001);
+		if((before>0 && after<0) || (before<0 && after>0))
+			return true;
+		else return false;
+	}
 }
