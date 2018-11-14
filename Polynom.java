@@ -239,17 +239,7 @@ public class Polynom implements Polynom_able{
 		return false;
 	}
 
-	@Override
-	/**
-	 * Compute a value x' (x0<=x'<=x1) for with |f(x')| < eps
-	 * assuming (f(x0)*f(x1)<=0, returns f(x2) such that:
-	 * *	(i) x0<=x2<=x2 && (ii) f(x2)<eps
-	 * @param x0 starting point
-	 * @param x1 end point
-	 * @param eps step (positive) value
-	 * @return the zero of the function
-	 */
-	public double root(double x0, double x1, double eps) {
+	public double zeros(double x0, double x1, double eps) {
 		Polynom p = new Polynom (); // creates a new polynom for temporary using
 		p.setPolynomArray(this.getPolynomArray());
 		p.setPolynom(this.getPolynom());
@@ -288,6 +278,36 @@ public class Polynom implements Polynom_able{
 		}
 		return 0;
 	}
+
+	@Override
+	/**
+	 * Compute a value x' (x0<=x'<=x1) for with |f(x')| < eps
+	 * assuming (f(x0)*f(x1)<=0, returns f(x2) such that:
+	 * *	(i) x0<=x2<=x2 && (ii) f(x2)<eps
+	 * @param x0 starting point
+	 * @param x1 end point
+	 * @param eps step (positive) value
+	 * @return the zero of the function
+	 */
+	public double root(double x0, double x1, double eps) {
+		double mid=x0;
+		if (this.f(x0)*this.f(x1)>=0) {
+			throw new RuntimeException("x0 and x1 arent opposite nums");
+		}
+		else {
+			while ((x1-x0)>=eps) {
+				mid=((x0+x1)/2);
+				if (this.f(mid)!=0) {
+					if (this.f(mid)*this.f(x0)<0) x1=mid;
+					else x0=mid;
+				} else {
+					return mid;
+				}
+			}
+			return mid;
+		}
+	}
+
 
 	@Override
 	/**
@@ -436,4 +456,5 @@ public class Polynom implements Polynom_able{
 		}
 		this.setPolynom(str);
 	}
+	
 }

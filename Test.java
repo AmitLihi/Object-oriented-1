@@ -1,5 +1,4 @@
 package myMath;
-
 public class Test {
 
 	public static void main(String[] args) {
@@ -152,16 +151,12 @@ public class Test {
 
 		//root function
 		Polynom p6 = new Polynom ("1*x^2+4*x^1");
-		System.out.println("root function: \"-2.0\":  " + p6.root(-10, 10, 0.001));
-		System.out.println("root function: \"0.0\":  " + p4.root(-10, 10, 0.001));
-		System.out.println("root function: \"x0 and x1 higher than 0\":  " + p2.root(-10, 10, 0.001));
+		System.out.println("root function: \"3.0517578125E-5\":  " + p6.root(-1,2, 0.0001));
 		System.out.println();
 		
 		//area function
 		System.out.println("area function: \"2.333583334999779\":  " + p6.area(0, 1, 0.0001));
-		System.out.println("area function: \"0.0\":  " + p4.area(0, 1, 0.0001));
-		System.out.println("area function: \"x0 and x1 higher than 0\":  " + p2.area(0, 1, 0.00001));
 		System.out.println();
-	
+		
 	}
 }
