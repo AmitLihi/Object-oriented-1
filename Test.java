@@ -162,6 +162,6 @@ public class Test {
 		p7.setVisible(true);
 		
 		//areaNegative function
-		System.out.println(p7.areaNegative(-2, 6, 0.001));
+		System.out.println("areaNegative function: \"25.183742050201328" + 	"\":  " + p7.areaNegative(-2, 6, 0.001));
 	}
 }
