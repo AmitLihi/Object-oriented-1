@@ -1,7 +1,7 @@
 # Object-oriented-1
 Report assignment 1: 
 <br>
-Programed by: Amit Bibi and Lihi Belfer.
+Programed by: Amit Bibi and Lihi Belfer.<br>
 Work Space: eclipse.
 <br>
 We gathered information from YouTube, google, Riemann integral Desmos (to check proper output), Gral library from github .
